@@ -1,7 +1,6 @@
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 def search_web(query):
-
     results = []
 
     with DDGS() as ddgs:

@@ -1,20 +1,32 @@
-from langchain_community.llms import Ollama
-from langchain.agents import initialize_agent, Tool
+import requests
 from tools.web_search import search_web
 
-llm = Ollama(model="llama3")
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL = "llama3"
 
-tools = [
-    Tool(
-        name="WebSearch",
-        func=search_web,
-        description="Search the internet for recent information"
-    )
-]
+def research_agent(query: str) -> str:
+    # get web results
+    web_results = search_web(query)
 
-research_agent = initialize_agent(
-    tools,
-    llm,
-    agent="zero-shot-react-description",
-    verbose=True
-)
+    prompt = f"""
+You are an AI research assistant.
+
+User question:
+{query}
+
+Relevant web information:
+{web_results}
+
+Provide a clear and concise answer.
+"""
+
+    payload = {
+        "model": MODEL,
+        "prompt": prompt,
+        "stream": False
+    }
+
+    response = requests.post(OLLAMA_URL, json=payload)
+    result = response.json()
+
+    return result["response"]
