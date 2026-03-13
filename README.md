@@ -12,6 +12,7 @@ This project demonstrates the architecture of a **tool-using AI agent system** a
 * Local LLM inference using Ollama
 * Web search integration
 * Modular AI agent architecture
+* Planner Agent for task breakdown
 * Tool-based reasoning workflow
 * Lightweight and fully local setup
 
@@ -19,14 +20,19 @@ This project demonstrates the architecture of a **tool-using AI agent system** a
 
 # Project Architecture
 
+The system follows a **multi-step AI agent workflow**.
+
 ```
 User Query
+   │
+   ▼
+Planner Agent
    │
    ▼
 Research Agent
    │
    ▼
-Search Tool
+Web Search Tool
    │
    ▼
 Ollama LLM
@@ -34,6 +40,26 @@ Ollama LLM
    ▼
 Generated Answer
 ```
+
+### Planner Agent
+
+Breaks the user query into structured research steps.
+
+Example:
+
+```
+User Query:
+What is Meditation?
+
+Research Plan:
+- Search information about Meditation
+- Analyze gathered information
+- Generate final research summary
+```
+
+### Research Agent
+
+Collects web search results and uses the LLM to generate a structured response.
 
 ---
 
@@ -43,10 +69,11 @@ Generated Answer
 ai-agent-research-assistant
 │
 ├── agents
+│   ├── planner_agent.py
 │   └── research_agent.py
 │
 ├── tools
-│   └── search_tool.py
+│   └── web_search.py
 │
 ├── main.py
 ├── requirements.txt
@@ -123,18 +150,21 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Example prompt:
+Example interaction:
 
 ```
-Research topic: AI agents
-```
+Ask Research Question: What is Meditation?
 
-Example output:
+Research Plan:
+- Search information about: What is Meditation?
+- Analyze gathered information
+- Generate final research summary
 
-```
-AI agents are autonomous systems capable of performing tasks
-by reasoning, planning, and using external tools such as search
-engines or APIs.
+Searching the web...
+Analyzing information with AI...
+
+Research Result:
+Meditation is a mind-body practice that involves training attention and awareness to cultivate a calm and focused state of mind.
 ```
 
 ---
@@ -144,18 +174,19 @@ engines or APIs.
 * Python
 * Ollama
 * Local LLMs
-* DuckDuckGo Search
-* Modular AI Agent Architecture
+* DuckDuckGo Web Search
+* AI Agent Architecture
 
 ---
 
 # Future Improvements
 
+* Conversation memory
 * Multi-agent collaboration system
-* Memory for conversation context
 * Web interface using Streamlit
 * Task planning agents
-* Document research capabilities
+* Document-based research
+* Streaming LLM responses
 
 ---
 
